@@ -15,5 +15,4 @@ public class World {
   public RectF getWorldRect() {
     return worldRect;
   }
-  // end of MyWorld
 }

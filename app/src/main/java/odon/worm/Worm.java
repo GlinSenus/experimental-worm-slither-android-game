@@ -21,8 +21,8 @@ public class Worm {
   private ArrayList<PointF> wormBodyPoints;
 
   private double xd, yd;
-  private double heading = -Math.PI / 2; // current direction (starts facing up)
-  private double maxTurn = 0.04; // max turn per frame, in radians
+  private double heading = -Math.PI / 2;
+  private double maxTurn = 0.04;
 
   Worm(int screenX, int screenY) {
     wormBodyPoints = new ArrayList<PointF>();
@@ -38,7 +38,6 @@ public class Worm {
     sX = screenX;
     sY = screenY;
 
-    // start/reset worm body
     reset();
   }
 
@@ -46,7 +45,6 @@ public class Worm {
     heading = -Math.PI / 2;
     wormBodyPoints.clear();
     bodyRects.clear();
-    // set head position and head rect
     Random r = new Random();
     head.set(new PointF(r.nextInt(100) + 50, r.nextInt(50) + 25));
     headRect.set(head.x - rectHalfSize, head.y - rectHalfSize, head.x + rectHalfSize,
@@ -78,32 +76,26 @@ public class Worm {
 
   public void updateWorm(double targetAngle) {
 
-    // difference between where the joystick points and where the worm faces
     double diff = targetAngle - heading;
 
-    // keep the difference between -PI and PI, so the worm turns the short way
     while (diff > Math.PI)
       diff -= 2 * Math.PI;
     while (diff < -Math.PI)
       diff += 2 * Math.PI;
 
-    // turn only a little bit each frame
     if (Math.abs(diff) <= maxTurn) {
       heading = targetAngle;
     } else {
       heading += Math.signum(diff) * maxTurn;
     }
 
-    // move head in the heading direction
     head.x = (float) (head.x + (wormSpeed * Math.cos(heading)));
     head.y = (float) (head.y + (wormSpeed * Math.sin(heading)));
     headRect.set(head.x - rectHalfSize, head.y - rectHalfSize, head.x + rectHalfSize,
         head.y + rectHalfSize);
 
-    // make the body parts move after the other
     for (int i = 0; i < wormBodyPoints.size(); i++) {
       if (i == 0) {
-        // make the first body part follow the head
         dX = wormBodyPoints.get(i).x - head.x;
         dY = wormBodyPoints.get(i).y - head.y;
         xd = bodyPointDis * Math.cos(getAngle(dX, dY));
@@ -115,7 +107,6 @@ public class Worm {
             wormBodyPoints.get(i).y - rectHalfSize, wormBodyPoints.get(i).x + rectHalfSize,
             wormBodyPoints.get(i).y + rectHalfSize);
       } else {
-        // make the other body parts to maintain a distance from the other part ahead of them
         dX = wormBodyPoints.get(i).x - wormBodyPoints.get(i - 1).x;
         dY = wormBodyPoints.get(i).y - wormBodyPoints.get(i - 1).y;
         xd = bodyPointDis * Math.cos(getAngle(dX, dY));
@@ -129,7 +120,6 @@ public class Worm {
     }
   }
 
-  // used to find the angle using point differences
   private double getAngle(float dX, float dY) {
     double angle = 0;
     if (dX != 0) {
@@ -175,5 +165,4 @@ public class Worm {
     return heading;
   }
 
-  // end of thw worm class
 }

@@ -34,13 +34,11 @@ public class Viewport {
     currentViewportWorldCentre = new PointF();
   }
 
-  // sets a point as the focus of the viewport camera
   public void setWorldCentre(float x, float y) {
     currentViewportWorldCentre.x = x;
     currentViewportWorldCentre.y = y;
   }
 
-  // converts object's world coordinates and measurements into screen coordin. and measurements
   public RectF worldToScreen(float objectX, float objectY, float objectWidth, float objectHeight) {
     int left = (int) (screenCentreX - ((currentViewportWorldCentre.x - objectX) * pixelsPerMetreX));
     int top = (int) (screenCentreY - ((currentViewportWorldCentre.y - objectY) * pixelsPerMetreY));
@@ -50,7 +48,6 @@ public class Viewport {
     return convertedRect;
   }
 
-  // converts world point into screen point
   public PointF worldToScreenPoint(float objectX, float objectY) {
     int left = (int) (screenCentreX - ((currentViewportWorldCentre.x - objectX) * pixelsPerMetreX));
     int top = (int) (screenCentreY - ((currentViewportWorldCentre.y - objectY) * pixelsPerMetreY));
@@ -60,7 +57,6 @@ public class Viewport {
     return convertedPoint;
   }
 
-  // (defective, needs editing) checks if an object is inside a specific range from the world focus point
   public boolean clipObjects(float objectX, float objectY, float objectWidth, float objectHeight) {
     boolean clipped = true;
 
@@ -77,5 +73,4 @@ public class Viewport {
 
     return clipped;
   }
-  // End of viewport class
 }

@@ -2,7 +2,6 @@ package odon.worm;
 
 import android.graphics.PointF;
 
-
 public class GameJoystick {
 
   double angle;
@@ -20,21 +19,14 @@ public class GameJoystick {
     radius = 80;
   }
 
-  // update method of the joystick control
   public void update(double dX,double dY, float tX, float tY){
 		
-		//the ff conditions will determine the direction where
-		//the worm head should move to, by getting the diff. between
-		//the joystick center and the current touch position.
 		if(dX!=0){
 			if(dX>0 && dY>0){
 				
-				//getting the angle using reverse tangent math. trigonometric function
 				angle=Math.atan(dY/dX);
-				//the result angle is measured in radians, not degrees.
 			}
 			else if(dX>0 && dY<0){
-				//(it must be radians)
 				angle=Math.toRadians(360)+(Math.atan(dY/dX));
 			} 
 			else if(dX<0 && dY>0){
@@ -65,7 +57,6 @@ public class GameJoystick {
 		}
 		
 
-		//sets the position of the tracker ball
 		
 		if(dY/Math.sin(angle)>radius){
 			tbPoint.x= (float) (cPoint.x+(radius*Math.cos(angle)));
@@ -77,26 +68,21 @@ public class GameJoystick {
 		
 	}
 
-  // angle-getting method
   public double getAngle() {
     return angle;
   }
 
-  // method for setting joystick center
   public void setCenter(float tX, float tY) {
     cPoint.x = tX;
     cPoint.y = tY;
   }
 
-  // method getting joystick center point
   public PointF getCenter() {
     return cPoint;
-    // method for getting tracker ball point for drawing
   }
 
   public PointF getTrackerBallPoint() {
     return tbPoint;
   }
 
-  // end of Game Joystick class
 }

@@ -6,7 +6,6 @@ import android.view.*;
 import android.content.*;
 import android.graphics.*;
 import java.util.*;
-// Import these at the top of your Activity file:
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -21,9 +20,7 @@ public class MainActivity extends Activity {
     WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(),
         getWindow().getDecorView());
     if (controller != null) {
-      // This hides both the status bar and the navigation bar completely
       controller.hide(WindowInsetsCompat.Type.systemBars());
-      // Allows the user to swipe from the edge to temporarily reveal bars
       controller.setSystemBarsBehavior(
           WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
     }
@@ -33,7 +30,7 @@ public class MainActivity extends Activity {
 
   @Override
   protected void onPause() {
-    gv.paused = true; // replaces gv.tmpPause = true
+    gv.paused = true;
     gv.stopLoop();
     super.onPause();
   }
@@ -41,7 +38,7 @@ public class MainActivity extends Activity {
   @Override
   protected void onResume() {
     super.onResume();
-    gv.startLoop(); // does nothing until the surface exists
+    gv.startLoop();
   }
 
   class GameView extends SurfaceView {
@@ -93,7 +90,6 @@ public class MainActivity extends Activity {
       c = new Canvas();
       p1 = new Paint();
       p2 = new Paint();
-      // get screen resolution
       Display display = getWindowManager().getDefaultDisplay();
       Point size = new Point();
       display.getSize(size);
@@ -122,7 +118,6 @@ public class MainActivity extends Activity {
       random = new Random();
       randFat = new Random();
 
-      // at the end of the GameView constructor:
       sh.addCallback(new SurfaceHolder.Callback() {
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
@@ -151,14 +146,12 @@ public class MainActivity extends Activity {
       if (c == null)
         return;
       try {
-        // draw the background
         c.drawColor(Color.rgb(18, 20, 31));
-        // draw the fruits
         p1.setStyle(Paint.Style.FILL);
 
         for (int j = 0; j < fruitsOnMap.size(); j++) {
           Fruit f = fruitsOnMap.get(j);
-          p1.setColor(f.getColor()); // each fruit uses its own color
+          p1.setColor(f.getColor());
           c.drawRoundRect(
               vp.worldToScreen(f.getfruitRect().left, f.getfruitRect().top,
                   f.getfruitRect().width(), f.getfruitRect().height()),
@@ -166,23 +159,19 @@ public class MainActivity extends Activity {
               f.getfruitRect().height() / 2 * vp.pixelsPerMetreY, p1);
         }
 
-        // set paint properties
         p1.setColor(Color.rgb(255, 77, 109));
         p1.setStyle(Paint.Style.STROKE);
         p1.setStrokeWidth(8);
 
-        // draw World Rectangle/ borders
         c.drawRect(vp.worldToScreen(mw.getWorldRect().left, mw.getWorldRect().top,
             mw.getWorldRect().width(), mw.getWorldRect().height()), p1);
 
-        // change paint properties
         p1.setColor(Color.argb(255, 120, 150, 255));
         p1.setStrokeWidth(2);
         p1.setStyle(Paint.Style.FILL);
 
         p1.setColor(Color.argb(255, 255, 140, 140));
         p1.setStyle(Paint.Style.FILL);
-        // draw the body of the worm
         for (int i = worm.getBodyRects().size() - 1; i > -1; i--) {
 
           c.drawRoundRect(
@@ -199,7 +188,6 @@ public class MainActivity extends Activity {
               worm.getBodyRects().get(i).height() / 2 * vp.pixelsPerMetreY, p2);
         }
 
-        // draw the head of the worm
         p2.setColor(Color.argb(255, 205, 90, 90));
         p2.setStyle(Paint.Style.FILL);
         c.drawRoundRect(
@@ -222,24 +210,20 @@ public class MainActivity extends Activity {
           }
         }
 
-        // draw the joystick control when touching the screen
         if (holding) {
 
           p1.setColor(Color.YELLOW);
 
           p1.setStyle(Paint.Style.FILL);
 
-          // draw the center of the joystick
           c.drawCircle(gj.getCenter().x, gj.getCenter().y, 15, p1);
 
           p1.setStyle(Paint.Style.STROKE);
           p1.setStrokeWidth(3);
 
-          // draw the joystick circular border
           c.drawCircle(gj.getCenter().x, gj.getCenter().y, gj.radius, p1);
 
           p1.setStyle(Paint.Style.FILL);
-          // draw the joystick tracker ball.
           c.drawCircle(gj.getTrackerBallPoint().x, gj.getTrackerBallPoint().y, 15, p1);
         }
         if (gameover) {
@@ -248,14 +232,13 @@ public class MainActivity extends Activity {
           p1.setTextSize(60);
           p1.setTextAlign(Paint.Align.CENTER);
 
-          // Vertical centering: shift down by half of the text height
           float y = screenY / 2f - (p1.descent() + p1.ascent()) / 2f;
           c.drawText("GAMEOVER", screenX / 2f, y, p1);
 
           p1.setTextSize(32);
           c.drawText("Tap to restart", screenX / 2f, y + 40, p1);
 
-          p1.setTextAlign(Paint.Align.LEFT); // reset so other text is not affected
+          p1.setTextAlign(Paint.Align.LEFT);
         }
 
         if (waitingToStart) {
@@ -291,17 +274,14 @@ public class MainActivity extends Activity {
       }
     }
 
-    // game update method
     private void updatePlaystate() {
-      // update the joystick control with touch inputs when
-      double target = worm.getHeading(); // default: keep going straight
+      double target = worm.getHeading();
 
       if (holding) {
         dX = dragX - touchX;
         dY = dragY - touchY;
         gj.update(dX, dY, touchX, touchY);
 
-        // steer only after the finger moved at least 10 pixels from the touch point
         if (dX * dX + dY * dY > 100) {
           target = gj.getAngle();
         }
@@ -309,12 +289,10 @@ public class MainActivity extends Activity {
 
       worm.updateWorm(target);
 
-      // sets the coordinates of the worm head as the focus of the viewport camera
       vp.setWorldCentre(worm.getHeadPoint().x, worm.getHeadPoint().y);
 
       if (gameover) {
         tmpPause = true;
-        // worm.reset();
 
       }
 
@@ -353,7 +331,6 @@ public class MainActivity extends Activity {
 
     }
 
-    // getting touch inputs
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
       switch (ev.getAction() & MotionEvent.ACTION_MASK) {
@@ -365,12 +342,12 @@ public class MainActivity extends Activity {
 
           touchX = ev.getX();
           touchY = ev.getY();
-          dragX = touchX; // avoids a jump from the old drag position
+          dragX = touchX;
           dragY = touchY;
 
           gj.setCenter(touchX, touchY);
 
-          if (gameover) { // restart on the next fresh touch
+          if (gameover) {
             gameover = false;
             tmpPause = false;
             worm.reset();
@@ -384,7 +361,7 @@ public class MainActivity extends Activity {
           break;
 
         case MotionEvent.ACTION_UP:
-          holding = false; // nothing else needed here
+          holding = false;
           break;
       }
       return true;
@@ -401,7 +378,7 @@ public class MainActivity extends Activity {
             if (!tmpPause && !paused && !waitingToStart)
               updatePlaystate();
 
-            drawPlayState(); // always draw, even when paused
+            drawPlayState();
             long wait = 16 - (System.currentTimeMillis() - start);
             if (wait > 0) {
               try {

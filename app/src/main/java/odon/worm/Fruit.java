@@ -18,7 +18,6 @@ public class Fruit {
       0xFFEA80FC // orchid
   };
   public int fatContents;
-
   private RectF fruitRect;
   private int fruitSize;
   private int color;
@@ -26,13 +25,8 @@ public class Fruit {
   public Fruit() {
     fatContents = 1;
     fruitRect = new RectF();
-
-    // random size: 1, 2 or 3
     fruitSize = rand.nextInt(3) + 1;
-
-    // alpha from 160 to 255: still some variety, but always clear
     int alpha = 160 + rand.nextInt(96);
-
     int base = PALETTE[rand.nextInt(PALETTE.length)];
     color = Color.argb(alpha, Color.red(base), Color.green(base), Color.blue(base));
   }
